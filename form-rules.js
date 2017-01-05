@@ -331,11 +331,17 @@
 							}
 						}else{
 							if(scope.config[token.value].call){
-								this.context.init.rules.push(scope.config[token.value](this));
+								var rule = scope.config[token.value](this);
+								if(false !== rule){
+									this.context.init.rules.push(rule);
+								}
 							}else{
 								var valueToken = this.configToken(scope.config[token.value]);
 								if(false !== valueToken){
-									this.context.init.rules.push(scope.config[token.value][valueToken](this));	
+									var rule = scope.config[token.value][valueToken](this);
+									if(false !== rule){
+										this.context.init.rules.push(rule);	
+									}
 								}
 							}
 						}
