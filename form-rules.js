@@ -116,7 +116,12 @@
     	checked: function(processor){
     		var selector = processor.selector();
     		return function(context){
-    			var elements = context.container.querySelectorAll(selector);
+    			var elements;
+    			if('self' === selector){
+    				elements = [context.element()];
+    			}else{
+    				elements = context.container.querySelectorAll(selector);
+    			}
     			return function(){
     				var checked = false, i;
     				for(i=0;i<elements.length;i++){
@@ -157,6 +162,44 @@
 	    	}
     	},
 
+		'max-length': function(processor){
+			var token = processor.safe();
+			if(c.NUMBER !== token.name){
+				return false;
+			}
+			return function(context){
+				return function(){
+					return context.content().trim().length > token.value ? 'max-length' : true;
+				}
+			};
+		},
+
+		'min-length': function(processor){
+			var token = processor.safe();
+			if(c.NUMBER !== token.name){
+				return false;
+			}	
+			return function(context){
+				return function(){
+					return context.content().trim().length < token.value ? 'min-length' : true;
+				}
+			}
+
+		},
+
+		'pattern': function(processor){
+			var token = processor.safe();
+			if(c.QUOTE !== token.name){
+				throw 'Invalid pattern value';
+			}
+			var regex = new RegExp(token.value.trim());
+			return function(context){
+				return function(){
+					return regex.test(context.content().trim()) ? true : 'pattern';
+				}
+			}
+		},
+
     	// 2. Context Id 
     	id: function(processor){
 			var token = processor.safe();
@@ -169,6 +212,17 @@
 
 			if(c.SEMI_VALUE !== processor.next()){
 				throw "Parse error: \";\" expected";
+			}
+		},
+
+		format: {
+			email: function(){
+				var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				return function(context){
+					return function(){
+						return regex.test(context.content().trim()) ? true : 'email'
+					}
+				}
 			}
 		},
 
