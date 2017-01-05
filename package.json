@@ -1,4 +1,15 @@
 {
+	"name": "form-rules",
+  "version": "0.0.1",
+  "main": "form-rules.min.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niepsuj/form-rules.git"
+  },
+  "scripts": {
+    "build": "grunt build"
+  },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-uglify": "^2.0.0"
