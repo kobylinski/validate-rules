@@ -1,7 +1,7 @@
 {
 	"name": "form-rules",
   "version": "0.0.1",
-  "main": "form-rules.min.js",
+  "main": "form-rules.js",
   "license": "MIT",
   "repository": {
     "type": "git",
