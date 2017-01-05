@@ -113,7 +113,7 @@
 				}
 			};
     	},
-    	radio: function(processor){
+    	checked: function(processor){
     		var selector = processor.selector();
     		return function(context){
     			var elements = context.container.querySelectorAll(selector);
@@ -199,7 +199,7 @@
 		content: function(processor){
 			var expr =  processor.stringExpr({
 				value: scope.functions.value,
-				radio: scope.functions.radio
+				checked: scope.functions.checked
 			});
 
 			return function(context){
@@ -315,51 +315,57 @@
 	scope.Processor.prototype = {
 		parse: function(){
 			this.lexer.input(this.context.definition);
-			var token;
-			while(null !== (token = this.lexer.token())){
-				if(c.IDENTIFIER === token.name){
-					if(scope.config[token.value]){
-						if(c.COLON !== this.safe().name) throw "Parse error: \":\" expected";
-						if(this.context.init[token.value]){
-							if(scope.config[token.value].call){
-								this.context.init[token.value] = scope.config[token.value](this);
-							}else{
-								var valueToken = this.configToken(scope.config[token.value]);
-								if(false !== valueToken){
-									this.context.init[token.value] = scope.config[token.value][valueToken](this);
-								}
-							}
+			var token, value;
+			while('' != (value = this.combine([c.IDENTIFIER, c.MINUS], c.COLON))){
+				if(scope.config[value]){
+					if(this.context.init[value]){
+						if(scope.config[value].call){
+							this.context.init[value] = scope.config[value](this);
 						}else{
-							if(scope.config[token.value].call){
-								var rule = scope.config[token.value](this);
-								if(false !== rule){
-									this.context.init.rules.push(rule);
-								}
-							}else{
-								var valueToken = this.configToken(scope.config[token.value]);
-								if(false !== valueToken){
-									var rule = scope.config[token.value][valueToken](this);
-									if(false !== rule){
-										this.context.init.rules.push(rule);	
-									}
-								}
+							var valueToken = this.configToken(scope.config[value]);
+							if(false !== valueToken){
+								this.context.init[value] = scope.config[value][valueToken](this);
 							}
 						}
 					}else{
-						this.skipToSemi();
+						if(scope.config[value].call){
+							var rule = scope.config[value](this);
+							if(false !== rule){
+								this.context.init.rules.push(rule);
+							}
+						}else{
+							var valueToken = this.configToken(scope.config[value]);
+							if(false !== valueToken){
+								var rule = scope.config[value][valueToken](this);
+								if(false !== rule){
+									this.context.init.rules.push(rule);
+								}
+							}
+						}
 					}
+				}else{
+					this.skipToSemi();
 				}
 			}
 		},
+
+		combine: function(accept, to){
+			var value = '', token;
+			while(null !== (token = this.lexer.token())){
+				if(to == token.name) return value;
+				if(-1 !== accept.indexOf(token.name) ){
+					value += token.value;
+				}
+			}
+
+			return value;
+		},
+
 		configToken: function(scope){
-			var token = this.lexer.token();
-			if(c.IDENTIFIER !== token.name)
-				throw "Parse error: IDENTIFIER expected";
-			if(!scope[token.value])
-				throw "Parse error: unexpected value \""+token.value+"\"";
-			if(!scope[token.value].call)
-				return false;
-			return token.value;
+			var value = this.combine([c.IDENTIFIER, c.MINUS], c.SEMI);
+			if(!scope[value]) throw "Parse error: unexpected value \""+value+"\"";
+			if(!scope[value].call) return false;
+			return value;
 		},
 		skipToSemi: function(){
 			do{
