@@ -358,7 +358,7 @@
 			id: function(){
 				return this.lexer.with('dash', function(){
 					var token = this.lexer.next();
-					if(null === token)
+					if(null === token) return null;
 					if(token.type != scope.Lexer.IDENTIFIER)
 						throw "Parse error: IDENTIFIER expected";
 					return token.value;
