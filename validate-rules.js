@@ -56,6 +56,11 @@
 			if(null === query) return function(){ return processor.context.element().value; };
 			else return function(){ return processor.context.$$(query).value; };
 		},
+		length: function(processor){
+			var query = processor.selector();
+			if(null === query) return function(){ return processor.context.element().value.length; };
+			else return function(){ return processor.context.$$(query).value.length; };
+		},
 		content: function(processor){
 			var id = processor.args(function(){ return processor.id(); });
 			if(null === id) return function(){ return processor.context.content(); };
@@ -224,6 +229,11 @@
 	        			operators[0] = '+'; 
 	        			values.unshift(function(a){ return function(a){ return -a(); }; })(values.shift());   
 	        		}],
+	        '>=':   [50, 50, factory(function(a,b){   return function(){ return a() <= b();   }}, 2)],
+	        '<=':   [50, 50, factory(function(a,b){   return function(){ return a() >= b();   }}, 2)],
+	        '>':    [50, 50, factory(function(a,b){   return function(){ return a() < b();    }}, 2)],
+	        '<':    [50, 50, factory(function(a,b){   return function(){ return a() > b();    }}, 2)],
+	        '!=':   [50, 50, factory(function(a,b){   return function(){ return a() != b();   }}, 2)],
 	        '==':   [50, 50, factory(function(a,b){   return function(){ return a() == b();   }}, 2)],
 	        '||':   [60, 60, factory(function(a,b){   return function(){ return a() || b();   }}, 2)],
 	        '&&':   [60, 60, factory(function(a,b){   return function(){ return a() && b();   }}, 2)],

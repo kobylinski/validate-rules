@@ -12,11 +12,13 @@
 <body>
 <form>
 <div class="container">
-
-  <div class="form-group" data-rules="required:!empty;" id="password">
+  <script type="text/javascript"> console.clear(); </script>
+  <div class="form-group" data-rules="required:!empty;min-length:length>=6;max-length:length<=10" id="password">
     <label for="pass1">Password</label>
     <input type="password" class="form-control" id="pass1" placeholder="Password">
     <label for="pass1" class="help-block err err-required">Missing password</label>
+    <label for="pass1" class="help-block err err-min-length">To short</label>
+    <label for="pass1" class="help-block err err-max-length">To long</label>
   </div>
   
   <div class="form-group" data-rules="required:!empty;equal:content(password)==value&&!valid(checkbox);">
@@ -34,10 +36,9 @@
   <button type="submit" class="btn btn-default">Submit</button>
 </div>
 </form>
-<script type="text/javascript" src="validate-rules.min.js"></script>
+<script type="text/javascript" src="validate-rules.js"></script>
 <script type="text/javascript">
 	var form = document.getElementsByTagName('form')[0];
-	console.clear();
 	var validator = new ValidateRules(form);
 	console.log(validator);
 	form.addEventListener('submit', function(e){
