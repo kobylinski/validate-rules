@@ -72,11 +72,11 @@
 			if(null === query)
 				return function(){
 					return processor.context.content() == ''; 
-				};
+				};			
 			return function(){
 				var el = processor.context.$$(query);	
-				if(['checkbox', 'radio'].indexOf(el.type)){
-					return el.checked;
+				if(['checkbox', 'radio'].indexOf(el.type) > -1){
+					return !el.checked;
 				}
 				return el.value == ''
 			}
@@ -94,6 +94,12 @@
 					processor.context.$$(query).value;
 				return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
 			}
+		},
+		pattern: function(processor){
+			var regex = processor.regex();
+			return function(){
+				return regex.test(processor.context.content().trim());
+			};
 		}
 	}
 
@@ -119,9 +125,8 @@
 			}
 		},
 		content: function(processor){
-			return function(context){
-				context.content = processor.expression.parse();
-			}
+			var expr = processor.expression.parse();
+			return function(context){ context.content = expr; };
 		},
 	};
 
@@ -194,15 +199,12 @@
 		    			}	
 	    			}
 	    		}
-
 	    		return true;
 	    	},
 
 	    	alert: function(label){
 	    		var el = this.root.querySelector('label.err-'+label);
-	    		if(null !== el){
-	    			el.classList.add('err-visible');
-	    		}
+	    		if(null !== el) el.classList.add('err-visible');
 	    	},
 
 	    	reset: function(){
@@ -231,21 +233,21 @@
 		var operators = {
 			'(':    [10, 70, function(operators, values){ }],
 	        '!':    [20, 20, factory(function(a){     return function(){ return !a()          }}, 1)],
-	      	'*':    [30, 30, factory(function(a,b){   return function(){ return a() * b();    }}, 2)],
-	      	'/':    [30, 30, factory(function(a,b){   return function(){ return a() / b();    }}, 2)],
-	      	'+': 	[40, 40, factory(function(a,b){   return function(){ return a() + b();    }}, 2)],
+	      	'*':    [30, 30, factory(function(a,b){   return function(){ return b() * a();    }}, 2)],
+	      	'/':    [30, 30, factory(function(a,b){   return function(){ return b() / a();    }}, 2)],
+	      	'+': 	[40, 40, factory(function(a,b){   return function(){ return b() + a();    }}, 2)],
 	        '-':   	[40, 40, function(operators, values){   
 	        			operators[0] = '+'; 
 	        			values.unshift(function(a){ return function(a){ return -a(); }; })(values.shift());   
 	        		}],
-	        '>=':   [50, 50, factory(function(a,b){   return function(){ return a() <= b();   }}, 2)],
-	        '<=':   [50, 50, factory(function(a,b){   return function(){ return a() >= b();   }}, 2)],
-	        '>':    [50, 50, factory(function(a,b){   return function(){ return a() < b();    }}, 2)],
-	        '<':    [50, 50, factory(function(a,b){   return function(){ return a() > b();    }}, 2)],
-	        '!=':   [50, 50, factory(function(a,b){   return function(){ return a() != b();   }}, 2)],
-	        '==':   [50, 50, factory(function(a,b){   return function(){ return a() == b();   }}, 2)],
-	        '||':   [60, 60, factory(function(a,b){   return function(){ return a() || b();   }}, 2)],
-	        '&&':   [60, 60, factory(function(a,b){   return function(){ return a() && b();   }}, 2)],
+	        '>=':   [50, 50, factory(function(a,b){   return function(){ return b() >= a();   }}, 2)],
+	        '<=':   [50, 50, factory(function(a,b){   return function(){ return b() <= a();   }}, 2)],
+	        '>':    [50, 50, factory(function(a,b){   return function(){ return b() > a();    }}, 2)],
+	        '<':    [50, 50, factory(function(a,b){   return function(){ return b() < a();    }}, 2)],
+	        '!=':   [50, 50, factory(function(a,b){   return function(){ return b() != a();   }}, 2)],
+	        '==':   [50, 50, factory(function(a,b){   return function(){ return b() == a();   }}, 2)],
+	        '||':   [60, 60, factory(function(a,b){   return function(){ return b() || a();   }}, 2)],
+	        '&&':   [60, 60, factory(function(a,b){   return function(){ return b() && a();   }}, 2)],
 	        ')':    [70, 10, function(operators, values){ operators.splice(0,2); }]
 		}
 
@@ -296,8 +298,8 @@
 						ops.unshift(token.value);
 						token = null; continue;
 					}
-					op(2)(ops, val);
-				}while(ops.length || !end);
+					if(op()) op(2)(ops, val);
+				}while(/*(console.log('hop', ops, this.lexer.buf.substr(this.lexer.pos-6, 6)) || true) &&*/ops.length || !end);
 				return val[0];
 			}
 		};
@@ -337,15 +339,14 @@
 			selector: function(){
 				return this.args(function(){
 					return this.lexer.with('space', function(){
-						var token, depth = 0, result = '';
+						var token, depth = 1, result = '';
 						do{
-							token = this.lexer.next();
-							switch(token.value){
-								case '(': depth++ ? result += '(': 0; break;
-								case ')': --depth ? result += '(': 0; break;
+							switch(this.lexer.read()){
+								case '(': depth++; break;
+								case ')': depth--; break;
 								case null: return result;
 								default:
-									result += token.value;
+									result += this.lexer.next().value;
 									break;
 							}
 						}while(depth);
@@ -377,6 +378,21 @@
 				if(this.lexer.read() !== ')') throw "Parse error: ')' expected";
 				this.lexer.pos++;
 				return result; 
+			},
+			regex: function(){
+				var par = false, c, buf = '';
+				if(this.lexer.next().value === '(') { par = true }
+				if(this.lexer.next().value !== '/') throw "Parse error: </> expected";
+				while(!this.lexer.end() && '/' != (c = this.lexer.read())){
+					if(c == '\\') { buf += c; this.lexer.pos++ }
+					buf += this.lexer.read();
+					this.lexer.pos++;
+				}
+				this.lexer.pos++;
+				if(par){
+					if(this.lexer.next().value !== ')') throw "Parse error: <)> expected";
+				}
+				return new RegExp(buf);
 			}
 		}
 
@@ -422,7 +438,7 @@
 	        ';':  ops.s,          ',':  ops.s,              '(':  ops.s,
 	        ')':  ops.s,          '<':  ops.d(['=']),       '>':  ops.d(['=']),
 	        '{':  ops.s,          '}':  ops.s,              '[':  ops.s,
-	        ']':  ops.s,          '=':  ops.d(['='])
+	        ']':  ops.s,          '=':  ops.d(['=']), 		'/':  ops.s
 	    }
 	    
 	    var withSpace = '\n\t\r '.split(''),
@@ -474,9 +490,9 @@
 	                    }
 	                    return token(Lexer.NUMBER, parseInt(chunk), this.pos);
 	                case test.q(c):
-	                    var offset = 1;
-	                    while('' !== (c = this.read(offset)) && !test.q(c)){ offset++; }
-	                    return token(Lexer.QUOTE, this.chunk(offset-1, 1), this.pos++);
+	                    var offset = 1, cc;
+	                    while('' !== (cc = this.read(offset)) && c !== cc){ offset++; }
+	                    return token(Lexer.QUOTE, this.chunk(offset-1, 1), (this.pos += 2));
 	                case test.a(c):
 	                    chunk = test.with(this, test.an(this.dash));
 	                    return token(Lexer.IDENTIFIER, chunk, this.pos);

@@ -7,6 +7,9 @@
 	.err{display: none;color: tomato;}
 	.err.err-visible{display: block;}
 	.container{padding-top: 40px;}
+  .form-control-feedback{display: none;}
+  .has-error.glyphicon-remove{display: block;}
+  .has-success.glyphicon-ok{display: block;}
 	</style>
 </head>
 <body>
@@ -28,14 +31,61 @@
     <label for="pass2" class="help-block err err-equal">Not the same</label>
   </div>
 
-  <div class="form-group" data-rules="valid:empty||email">
+  <div class="form-group" data-rules="valid:email">
     <label for="email">Email address</label>
     <input type="text" class="form-control" id="email" placeholder="Email">
     <label for="email" class="help-block err err-valid">Invalid email</label>
   </div>
 
+  <div class="form-group" data-rules="valid:email">
+    <label for="email">Email address</label>
+    <input type="text" class="form-control" id="email" placeholder="Email">
+    <label for="email" class="help-block err err-valid">Invalid email</label>
+  </div>
+
+  <div class="form-group" data-rules="required:!empty(#ch1) && !empty(#ch2)">
+    <label class="checkbox-inline">
+      <input type="checkbox" id="ch1" value="option1"> 1
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="ch2" value="option2"> 2
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" id="ch3" value="option3"> 3
+    </label>
+    <label for="email" class="help-block err err-required">Option 1 and 2 are required</label>
+  </div>
+
+  <div class="row" data-rules="
+    content: content(hello1) + ' ' + content(hello2);
+    valid:!(valid(hello1) && valid(hello2)) || content == 'hello world'">
+    <div class="col-xs-6">
+      <div class="form-group" data-rules="required:!empty" id="hello1">
+        <label for="hello1-field">Type "hello"</label>
+        <input type="text" class="form-control" id="hello1-field" placeholder="...">
+        <label for="hello1-field" class="help-block err err-required">Missing value</label>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group" data-rules="required:!empty" id="hello2">
+        <label for="hello2-field">Type "world"</label>
+        <input type="text" class="form-control" id="hello2-field" placeholder="...">
+        <label for="hello2-field" class="help-block err err-required">Missing value</label>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <label for="email" class="help-block err err-valid">Invalid value</label>
+    </div>
+  </div>
+
+  <div class="form-group" data-rules="valid:empty || pattern(/^\d{2}-\d{3}$/)">
+    <label for="postcode">Post code</label>
+    <input type="text" class="form-control" id="postcode" placeholder="00-000">
+    <label for="postcode" class="help-block err err-valid">Invalid postcode</label>
+  </div>
+
   <div class="checkbox" data-rules="required:!empty" id="checkbox">
-    <label><input type="checkbox">Yes, those are the same</label>
+    <label><input type="checkbox">Accept sth</label>
   	<label for="checkbox" class="help-block err err-required">Seriously?</label>
   </div>
   
