@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<style type="text/css">
+	.err{display: none;color: tomato;}
+	.err.err-visible{display: block;}
+	.container{padding-top: 40px;}
+	</style>
+</head>
+<body>
+<form>
+<div class="container">
+
+  <div class="form-group" data-rules="required:!empty;" id="password">
+    <label for="pass1">Password</label>
+    <input type="password" class="form-control" id="pass1" placeholder="Password">
+    <label for="pass1" class="help-block err err-required">Missing password</label>
+  </div>
+  
+  <div class="form-group" data-rules="required:!empty;equal:content(password)==value&&!valid(checkbox);">
+    <label for="pass2">Repeat password</label>
+    <input type="password" class="form-control" id="pass2" placeholder="Password">
+    <label for="pass2" class="help-block err err-required">Missing password</label>
+    <label for="pass2" class="help-block err err-equal">Not the same</label>
+  </div>
+
+  <div class="checkbox" data-rules="required:!empty" id="checkbox">
+    <label><input type="checkbox">Yes, those are the same</label>
+  	<label for="checkbox" class="help-block err err-required">Seriously?</label>
+  </div>
+  
+  <button type="submit" class="btn btn-default">Submit</button>
+</div>
+</form>
+<script type="text/javascript" src="validate-rules2.js"></script>
+<script type="text/javascript">
+	var form = document.getElementsByTagName('form')[0];
+	console.clear();
+	var validator = new ValidateRules(form);
+	console.log(validator);
+	form.addEventListener('submit', function(e){
+		e.preventDefault()
+		validator.validate();
+	});
+</script>
+</body>
+</html>

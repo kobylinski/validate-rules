@@ -9,7 +9,7 @@ module.exports = function(grunt){
 			},
 			build:{
 				files: {
-					'form-rules.min.js': ['form-rules.js']
+					'validate-rules.min.js': ['validate-rules.js']
 				}
 			}
 		}
