@@ -85,6 +85,15 @@
 			var id = processor.args(function(){ return processor.id(); });
 			if(null === id) throw "Parse error: <id> required";
 			return function(){ return true === processor.context.form.rules[id].check(); }
+		},
+		email: function(processor){
+			var query = processor.selector();
+			return function(){
+				var value = null === query ? 
+					processor.context.content().trim() :
+					processor.context.$$(query).value;
+				return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value);
+			}
 		}
 	}
 

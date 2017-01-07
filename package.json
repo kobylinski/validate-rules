@@ -1,6 +1,6 @@
 {
 	"name": "validate-rules",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "validate-rules.js",
   "license": "MIT",
   "repository": {
