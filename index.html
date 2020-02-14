@@ -96,7 +96,6 @@
 <script type="text/javascript">
 	var form = document.getElementsByTagName('form')[0];
 	var validator = new ValidateRules(form);
-	console.log(validator);
 	form.addEventListener('submit', function(e){
 		e.preventDefault()
 		validator.validate();
