@@ -1,6 +1,14 @@
 # Inline validation rules
 
-Inspired by inline styles, ships bunch of validation rules attachable to form like a inline styles.
+Micro tool (3kb) inspired by inline styles, ships bunch of validation rules attachable to form like a inline styles.
+
+## Install
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/kobylinski/validate-rules@v0.1.6/validate-rules.min.js"></script>
+```
+
+## Usage
 
 ```html
 <div class="form-group" data-rules="required:!empty;valid:email">
