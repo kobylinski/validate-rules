@@ -11,11 +11,11 @@ Micro tool (3kb) inspired by inline styles, ships bunch of validation rules atta
 ## Usage
 
 ```html
-<div class="form-group" data-rules="required:!empty;valid:email">
+<div data-rules="required:!empty;valid:email">
 	<label for="email">Email address</label>
-	<input type="text" class="form-control" id="email" placeholder="Email">
-	<label for="email" class="help-block err err-required">Missing email</label>
-	<label for="email" class="help-block err err-valid">Invalid email</label>
+	<input type="text" id="email" placeholder="Email">
+	<label for="email" class="err err-required">Missing email</label>
+	<label for="email" class="err err-valid">Invalid email</label>
 </div>
 ```
 
@@ -40,32 +40,23 @@ lebel.err.err-visible{
 Adding `data-rules` attribute you create scope. Each validation rule refers to validation message defined inside scope. One scope should contain only one form element. If you need to define validation rule based on multiple values, you should export value from scope (defining id attribute in scope tags) and use those ids in parent scope.
 
 ```html
-<div class="row" data-rules="
-	content:content(hello1)+' '+content(hello2);
-	valid:!(valid(hello1)&&valid(hello2))||content=='hello world'
-">
-	<div class="col-xs-6">
-  		<div class="form-group" data-rules="required:!empty" id="hello1">
-    		<label for="hello1-field">Type "hello"</label>
-    		<input type="text" class="form-control" id="hello1-field" placeholder="...">
-    		<label for="hello1-field" class="help-block err err-required">Missing value</label>
-  		</div>
+<div data-rules="content:content(hello1)+' '+content(hello2);valid:!(valid(hello1)&&valid(hello2))||content=='hello world'">
+	<div data-rules="required:!empty" id="hello1">
+		<label for="hello1-field">Type "hello"</label>
+		<input type="text" id="hello1-field" placeholder="...">
+		<label for="hello1-field" class="err err-required">Missing value</label>
 	</div>
-	<div class="col-xs-6">
-  		<div class="form-group" data-rules="required:!empty" id="hello2">
-    		<label for="hello2-field">Type "world"</label>
-    		<input type="text" class="form-control" id="hello2-field" placeholder="...">
-    		<label for="hello2-field" class="help-block err err-required">Missing value</label>
-  		</div>
+	<div data-rules="required:!empty" id="hello2">
+		<label for="hello2-field">Type "world"</label>
+		<input type="text" id="hello2-field" placeholder="...">
+		<label for="hello2-field" class="err err-required">Missing value</label>
 	</div>
-	<div class="col-xs-12">
-  		<label for="email" class="help-block err err-valid">Invalid value</label>
-	</div>
+	<label for="email" class="err err-valid">Invalid value</label>
 </div>
 
 ```
 
-
+Directive `content` create value based on two fields used in other tests.
 
 
 
