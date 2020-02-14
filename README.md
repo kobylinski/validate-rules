@@ -25,8 +25,7 @@ const validator = new ValidateRules(
 );
 
 form.addEventListener('submit', function(e){
-	e.preventDefault()
-	validator.validate();
+	validator.validate() || e.preventDefault();
 });
 ```
 
