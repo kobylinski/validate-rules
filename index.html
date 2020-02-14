@@ -10,12 +10,20 @@
   .form-control-feedback{display: none;}
   .has-error.glyphicon-remove{display: block;}
   .has-success.glyphicon-ok{display: block;}
+  pre{ font-family: monospace;margin-top: 5rem; }
+  pre small{ color: #888;  }
+  .row pre{  margin-top: 1rem; }
 	</style>
 </head>
 <body>
 <form>
 <div class="container">
   <script type="text/javascript"> console.clear(); </script>
+
+<pre>
+<small>Required, 6 to 10 letters</small>
+&lt;div data-rules="<strong>required:!empty;min-length:length>=6;max-length:length<=10</strong>" id="password"&gt;</pre>
+
   <div class="form-group" data-rules="required:!empty;min-length:length>=6;max-length:length<=10" id="password">
     <label for="pass1">Password</label>
     <input type="password" class="form-control" id="pass1" placeholder="Password">
@@ -24,26 +32,32 @@
     <label for="pass1" class="help-block err err-max-length">To long</label>
   </div>
   
-  <div class="form-group" data-rules="required:!empty;equal:content(password)==value&&!valid(checkbox);">
+<pre>
+<small>Required, equal with field abowe but only if the last checkbox is checked.</small>
+&lt;div data-rules="<strong>required:!empty;equal:content(password)==value&&valid(checkbox);</strong>"&gt;</pre>
+
+  <div class="form-group" data-rules="required:!empty;equal:content(password)==value&&valid(checkbox);">
     <label for="pass2">Repeat password</label>
     <input type="password" class="form-control" id="pass2" placeholder="Password">
     <label for="pass2" class="help-block err err-required">Missing password</label>
     <label for="pass2" class="help-block err err-equal">Not the same</label>
   </div>
+  
+<pre>
+<small>Email format</small>
+&lt;div data-rules="<strong>valid:email</strong>"&gt;</pre>
 
   <div class="form-group" data-rules="valid:email">
     <label for="email">Email address</label>
     <input type="text" class="form-control" id="email" placeholder="Email">
     <label for="email" class="help-block err err-valid">Invalid email</label>
   </div>
+  
+<pre>
+<small>1 and 2 checkbox should be checked</small>
+&lt;div data-rules="<strong>required:!empty(#ch1) && !empty(#ch2)</strong>"&gt;</pre>
 
-  <div class="form-group" data-rules="valid:email">
-    <label for="email">Email address</label>
-    <input type="text" class="form-control" id="email" placeholder="Email">
-    <label for="email" class="help-block err err-valid">Invalid email</label>
-  </div>
-
-  <div class="form-group" data-rules="required:!empty(#ch1) && !empty(#ch2)">
+  <div class="form-group" data-rules="required: !empty(#ch1) && !empty(#ch2)">
     <label class="checkbox-inline">
       <input type="checkbox" id="ch1" value="option1"> 1
     </label>
@@ -56,10 +70,19 @@
     <label for="email" class="help-block err err-required">Option 1 and 2 are required</label>
   </div>
 
-  <div class="row" data-rules="
-    content: content(hello1) + ' ' + content(hello2);
-    valid:!(valid(hello1) && valid(hello2)) || content == 'hello world'">
+
+<pre>
+<small>Concat values of both fields below. Check if both are valid and test that concatenated value equals expected once.</small>
+&lt;div data-rules="<strong>content: content(hello1) + ' ' + content(hello2); valid:valid(hello1) && valid(hello2); expected:content == 'hello world'</strong>"&gt;</pre>
+
+
+  <div class="row" data-rules="content: content(hello1) + ' ' + content(hello2); valid:valid(hello1) && valid(hello2); expected:content == 'hello world'">
     <div class="col-xs-6">
+      
+<pre>
+<small>Not empty</small>
+&lt;div data-rules="<strong>required:!empty</strong>" id="<strong>hello1</strong>"&gt;</pre>
+
       <div class="form-group" data-rules="required:!empty" id="hello1">
         <label for="hello1-field">Type "hello"</label>
         <input type="text" class="form-control" id="hello1-field" placeholder="...">
@@ -68,21 +91,36 @@
     </div>
     <div class="col-xs-6">
       <div class="form-group" data-rules="required:!empty" id="hello2">
+        
+<pre>
+<small>Not empty</small>
+&lt;div data-rules="<strong>required:!empty</strong>" id="<strong>hello2</strong>"&gt;</pre>
+
         <label for="hello2-field">Type "world"</label>
         <input type="text" class="form-control" id="hello2-field" placeholder="...">
         <label for="hello2-field" class="help-block err err-required">Missing value</label>
       </div>
     </div>
     <div class="col-xs-12">
-      <label for="email" class="help-block err err-valid">Invalid value</label>
+      <label class="help-block err err-valid">Invalid value</label>
+      <label class="help-block err err-expected">Not expected value</label>
     </div>
   </div>
+
+<pre>
+<small>Regex format</small>
+&lt;div data-rules="<strong>valid:empty || pattern(/^\d{2}-\d{3}$/)</strong>"&gt;</pre>
 
   <div class="form-group" data-rules="valid:empty || pattern(/^\d{2}-\d{3}$/)">
     <label for="postcode">Post code</label>
     <input type="text" class="form-control" id="postcode" placeholder="00-000">
     <label for="postcode" class="help-block err err-valid">Invalid postcode</label>
   </div>
+
+<pre>
+<small>Should be checked</small>
+&lt;div data-rules="<strong>required:!empty</strong>"&gt;</pre>
+
 
   <div class="checkbox" data-rules="required:!empty" id="checkbox">
     <label><input type="checkbox">Accept sth</label>

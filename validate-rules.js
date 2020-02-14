@@ -38,7 +38,9 @@
 			},
 			validate: function(){
 				var result = true, i;
-				for(i in this.rules) result = this.rules[i].validate() && result;
+				for(i in this.rules) {
+					result = this.rules[i].validate() && result;
+				}
 				return result;
 			},
 			$: function(selector){ return this.form.querySelectorAll(selector); },
@@ -68,18 +70,12 @@
 		
 		},
 		empty: function(processor){
-			var query = processor.selector();
-			if(null === query)
-				return function(){
-					return processor.context.content() == ''; 
-				};			
-			return function(){
-				var el = processor.context.$$(query);	
-				if(['checkbox', 'radio'].indexOf(el.type) > -1){
-					return !el.checked;
-				}
-				return el.value == ''
+			const query = processor.selector();		
+			if(null === query){
+				return () => processor.context.content() == '';
 			}
+			const el = processor.context.$$(query);
+			return () => ['checkbox', 'radio'].indexOf(el.type) > -1 ? !el.checked : el.value == '';
 		},
 		valid: function(processor){
 			var id = processor.args(function(){ return processor.id(); });

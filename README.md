@@ -8,6 +8,12 @@ Micro tool (3kb) inspired by inline styles, ships bunch of validation rules atta
 <script src="https://cdn.jsdelivr.net/gh/kobylinski/validate-rules@v0.1.6/validate-rules.min.js"></script>
 ```
 
+## Definition
+
+`definition:expression`
+* `definition`: user defined keyword - name of validator used as error class of message `err-[definition]`
+* `expression`: test expression
+
 ## Usage
 
 ```html
