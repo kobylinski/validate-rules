@@ -20,9 +20,8 @@ Micro tool (3kb) inspired by inline styles, ships bunch of validation rules atta
 ```
 
 ```js
-const validator = new ValidateRules(
-	document.getElementsByTagName('form')[0]
-);
+const form = document.getElementsByTagName('form')[0];
+const validator = new ValidateRules( form );
 
 form.addEventListener('submit', function(e){
 	validator.validate() || e.preventDefault();
