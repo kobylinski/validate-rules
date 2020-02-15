@@ -74,6 +74,9 @@
 			if(null === query){
 				return () => processor.context.content() == '';
 			}
+			if(query[0] === '@'){
+				return () => processor.context.form.rules[query.slice(1)].content()
+ 			}
 			const el = processor.context.$$(query);
 			return () => ['checkbox', 'radio'].indexOf(el.type) > -1 ? !el.checked : el.value == '';
 		},
@@ -451,7 +454,7 @@
 	        n: function(c){ return c >= '0' && c<= '9'; },
 	        q: function(c){ return c === '"' || c === "'"; },
 	        c: function(c){ return function(cc){ return c == cc }},
-	        v: function(c){ return c==='_'||c==='$'; },
+	        v: function(c){ return c==='_'||c==='$'||c==='@'; },
 	        a: function(c){ return c>='a'&&c<='z'||c>='A'&&c<='Z' || test.v(c); },
 	        w: function(c){ return c===' '||c==='\t'; },
 	        an: function(dash){ return function(c){ return test.n(c) || test.a(c) || ( dash ? c=='-' : false ); }},
@@ -476,6 +479,7 @@
 	            skip(this);
 	            if(this.end()) return null;
 	            var c = this.read(), chunk;
+	            console.log( c );
 	            switch(true){
 	                case test.n(c):
 	                    chunk = test.with(this, test.n);

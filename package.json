@@ -1,5 +1,5 @@
 {
-	"name": "validate-rules",
+  "name": "validate-rules",
   "version": "0.1.6",
   "main": "validate-rules.js",
   "license": "MIT",
@@ -8,10 +8,9 @@
     "url": "https://github.com/niepsuj/validate-rules.git"
   },
   "scripts": {
-    "build": "grunt"
+    "build": "terser --compress --mangle --safari10 -- validate-rules.js > validate-rules.min.js"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-uglify": "^2.0.0"
+    "terser": "^4.6.3"
   }
 }

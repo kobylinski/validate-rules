@@ -47,7 +47,7 @@
 <small>Email format</small>
 &lt;div data-rules="<strong>valid:email</strong>"&gt;</pre>
 
-  <div class="form-group" data-rules="valid:email">
+  <div class="form-group" data-rules="valid:email" id="email_field">
     <label for="email">Email address</label>
     <input type="text" class="form-control" id="email" placeholder="Email">
     <label for="email" class="help-block err err-valid">Invalid email</label>
@@ -111,7 +111,7 @@
 <small>Regex format</small>
 &lt;div data-rules="<strong>valid:empty || pattern(/^\d{2}-\d{3}$/)</strong>"&gt;</pre>
 
-  <div class="form-group" data-rules="valid:empty || pattern(/^\d{2}-\d{3}$/)">
+  <div class="form-group" data-rules="valid:(empty || pattern(/^\d{2}-\d{3}$/))&&!empty(@email_field)">
     <label for="postcode">Post code</label>
     <input type="text" class="form-control" id="postcode" placeholder="00-000">
     <label for="postcode" class="help-block err err-valid">Invalid postcode</label>
