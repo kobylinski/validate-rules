@@ -479,7 +479,6 @@
 	            skip(this);
 	            if(this.end()) return null;
 	            var c = this.read(), chunk;
-	            console.log( c );
 	            switch(true){
 	                case test.n(c):
 	                    chunk = test.with(this, test.n);
