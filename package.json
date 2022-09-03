@@ -10,6 +10,6 @@
     "build": "terser --compress --mangle --safari10 -- validate-rules.js > validate-rules.min.js"
   },
   "devDependencies": {
-    "terser": "^4.6.3"
+    "terser": "^4.8.1"
   }
 }
